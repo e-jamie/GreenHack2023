@@ -43,6 +43,29 @@ def split_grocery_items(data, individuals):
 
   return individual_costs
 
+#QR Code
+api_key = "samplebeaconstacAPIkey"
+request = requests.Request("POST", "https://api.beaconstac.com/v1/qrcodes", headers={
+    "Authorization": "Token {}".format(api_key),
+    "OrganizationId": organization_id
+})
+
+data = {
+    "content": "Please collect your order within 48 hours"
+}
+
+response = requests.Session().send(request, data=data)
+
+if response.status_code == 200:
+    # QR code image data
+    qr_code_data = response.content
+
+    # Save the QR code image data to a file
+    with open("qr_code.png", "wb") as f:
+        f.write(qr_code_data)
+
+else:
+    print("Error generating QR code: {}".format(response.status_code))
 
 def main():
   url = 'https://www.makro.cz/'
